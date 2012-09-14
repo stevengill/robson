@@ -1,12 +1,41 @@
 #!/usr/bin/env node
 
-require('shelljs/global');
-VERSION = process.argv[2]
+
+VERSION = process.argv[2];
 var util            = require('util')
 ,   exec            = require('child_process').exec
 ,   fs              = require('fs')
+,   shjs            = require('shelljs')
 ,	oldVer          = process.argv[3];
 
+//if phonegap directory already exisits, make sure it is latest code
+if (shjs.test('-d','./phonegap')){
+    shjs.exec('echo phonegap directory exists', {async:true});
+    shjs.exec('cd phonegap && git pull origin master', {async:true});
+    
+}else{
+    //grab phonegap repo off github
+    shjs.exec("git clone https://github.com/phonegap/phonegap.git", function(err, stdout, stderr) {
+    	if (err !== null) {
+    		console.log('ERROR!' + err);
+      		util.puts(stderr);
+    	} else {
+      		util.puts(stdout);
+    	}
+    });
+}
 
-mkdir('-p', 'Release');
+//start coho
 
+shjs.exec("./node_modules/coho/coho all 2.1.0 2.0.0", {async:true}, function(err, stdout, stderr) {
+	if (err !== null) {
+		console.log('ERROR!' + err);
+  		util.puts(stderr);
+	} else {
+  		util.puts(stdout);
+	}
+});
+
+//need to run commands on each repo to create and then copy to phonegap folder
+//copy changelog
+//copy readme + disclaimer files
