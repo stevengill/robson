@@ -1,41 +1,142 @@
 #!/usr/bin/env node
 
 
-VERSION = process.argv[2];
+//VERSION = process.argv[3];
+VERSION = '2.1.0';
 var util            = require('util')
-,   exec            = require('child_process').exec
-,   fs              = require('fs')
+,   exec           = require('child_process').exec
 ,   shjs            = require('shelljs')
-,	oldVer          = process.argv[3];
+,   tempRepoDir    = 'temp/repositories'
+,	oldVer          = process.argv[4];
+
+var commandQueue = [],
+    commandSyncQueue = [],
+    child1,
+    child2;
+    
+function queueCommand(cmd) {
+    commandQueue.push(cmd);
+}
+
+function queueSyncCommand(cmd) {
+    commandSyncQueue.push(cmd);
+}
+
+function executeCommands(callback) {
+    var cmd = commandQueue.shift();
+    if (cmd) {
+		child1 = shjs.exec(cmd, {async:true}, function(err, stdout, stderr) {
+        	if (err !== 0) {
+        		console.log('ERROR!' + err);
+          		util.puts(stderr);
+		  		executeCommands(callback);
+        	} else {
+          		executeCommands(callback);
+        	}
+		});
+    	if (commandQueue.length === 0) {
+    		// Attach the callback to the child since this is the last command.
+    		child1.on('exit', callback);
+   		}
+    }
+}
+
+function executeSyncCommands(callback) {
+    var cmd = commandSyncQueue.shift();
+    if (cmd) {
+		child2 = exec(cmd, function(err, stdout, stderr) {
+        	if (err !== null) {
+        		console.log('ERROR!' + err);
+          		util.puts(stderr);
+		  		executeSyncCommands(callback);
+        	} else {
+        	    util.puts(stdout);
+          		executeSyncCommands(callback);
+        	}
+		});
+    	if (commandSyncQueue.length === 0) {
+    		// Attach the callback to the child since this is the last command.
+    		child2.on('exit', callback);
+   		}
+    }
+}
+
+//check for git dependancy
+if (!shjs.which('git')) {
+  queueCommand('echo Sorry, this script requires git');
+  exit(1);
+}
 
 //if phonegap directory already exisits, make sure it is latest code
 if (shjs.test('-d','./phonegap')){
-    shjs.exec('echo phonegap directory exists', {async:true});
-    shjs.exec('cd phonegap && git pull origin master', {async:true});
+    queueCommand('echo phonegap directory exists');
+    queueCommand('cd phonegap && git pull origin master');
     
 }else{
     //grab phonegap repo off github
-    shjs.exec("git clone https://github.com/phonegap/phonegap.git", function(err, stdout, stderr) {
-    	if (err !== null) {
-    		console.log('ERROR!' + err);
-      		util.puts(stderr);
-    	} else {
-      		util.puts(stdout);
-    	}
-    });
+    queueCommand("git clone https://github.com/phonegap/phonegap.git");
 }
 
-//start coho
+//run coho
+//queueCommand("./node_modules/coho/coho all 2.1.0 2.0.0");
 
-shjs.exec("./node_modules/coho/coho all 2.1.0 2.0.0", {async:true}, function(err, stdout, stderr) {
-	if (err !== null) {
-		console.log('ERROR!' + err);
-  		util.puts(stderr);
-	} else {
-  		util.puts(stdout);
-	}
+
+//ios
+queueCommand("rm -rf phonegap/lib/ios/*");
+queueCommand("cp -r temp/repositories/incubator-cordova-ios/* phonegap/lib/ios/");
+
+//android
+queueCommand("rm -rf phonegap/lib/android/*");
+//possible sync issue below
+queueSyncCommand("cd temp/repositories/incubator-cordova-android && ./bin/create");
+queueSyncCommand("cp -r temp/repositories/incubator-cordova-android/* phonegap/lib/android/");
+queueSyncCommand("rm -rf phonegap/lib/framework && rm -rf phonegap/lib/test");
+queueSyncCommand("cp phonegap/lib/android/example/libs/cordova-"+VERSION+".jar phonegap/lib/android/");
+queueSyncCommand("cp phonegap/lib/android/example/assets/www/cordova-"+VERSION+".js phonegap/lib/android/");
+queueSyncCommand("cp -r phonegap/lib/android/example/res/xml phonegap/lib/android/");
+
+//blackberry
+queueCommand("rm -rf phonegap/lib/blackberry/*");
+queueCommand("cp temp/repositories/incubator-cordova-blackberry-webworks/NOTICE phonegap/lib/blackberry/");
+queueCommand("cp temp/repositories/incubator-cordova-blackberry-webworks/LICENSE phonegap/lib/blackberry/");
+queueCommand("cp temp/repositories/incubator-cordova-blackberry-webworks/VERSION phonegap/lib/blackberry/");
+queueCommand("cp -r temp/repositories/incubator-cordova-blackberry-webworks/bin phonegap/lib/blackberry/");
+//possible sync issue below
+queueCommand("cd temp/repositories/incubator-cordova-blackberry-webworks && ant dist");
+queueCommand("cp -r temp/repositories/incubator-cordova-blackberry-webworks/dist/* phonegap/lib/blackberry/");
+
+//windows phone 7
+queueCommand("rm -rf phonegap/lib/windows-phone/*");
+queueCommand("cp -r temp/repositories/incubator-cordova-wp7/* phonegap/lib/windows-phone/");
+
+//webos
+queueCommand("rm -rf phonegap/lib/webos/*");
+queueCommand("cp -r temp/repositories/incubator-cordova-webos/* phonegap/lib/webos/");
+
+//bada
+queueCommand("rm -rf phonegap/lib/bada/*");
+queueCommand("cp -r temp/repositories/incubator-cordova-bada/* phonegap/lib/bada/");
+
+//badawac
+queueCommand("rm -rf phonegap/lib/badaWac/*");
+queueCommand("cp -r temp/repositories/incubator-cordova-bada-wac/* phonegap/lib/badaWac/");
+
+//docs
+//queueCommand("rm -rf phonegap/doc/*");
+//queueCommand("cd temp/repositories/incubator-cordova-docs && ./bin/generate && cp -r public/en/"+VERSION+"/* ../../../phonegap/doc/");
+
+//copy changelog
+queueCommand("cp -r temp/release/src/cordova-"+VERSION+"/changelog phonegap/");
+
+//copy update version file
+queueCommand("cp -r temp/repositories/incubator-cordova-android/VERSION phonegap/");
+
+executeCommands(function(){
+	shjs.exec("echo DONE", {async:true}, function(e, stdout, stderr) {
+	});
 });
 
-//need to run commands on each repo to create and then copy to phonegap folder
-//copy changelog
-//copy readme + disclaimer files
+executeSyncCommands(function(){
+	shjs.exec("echo SyncDONE", function(e, stdout, stderr) {
+	});
+});
