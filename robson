@@ -35,35 +35,6 @@ function executeCommands(callback) {
     }
 }
 
-//var  commandSyncQueue = [],
-//    child2;
-
-/*
-function queueSyncCommand(cmd) {
-    commandSyncQueue.push(cmd);
-}
-
-function executeSyncCommands(callback) {
-    var cmd = commandSyncQueue.shift();
-    if (cmd) {
-		child2 = exec(cmd, function(err, stdout, stderr) {
-        	if (err !== null) {
-        		console.log('ERROR!' + err);
-          		util.puts(stderr);
-		  		executeSyncCommands(callback);
-        	} else {
-        	    util.puts(stdout);
-          		executeSyncCommands(callback);
-        	}
-		});
-    	if (commandSyncQueue.length === 0) {
-    		// Attach the callback to the child since this is the last command.
-    		child2.on('exit', callback);
-   		}
-    }
-}
-*/
-
 //check for git dependancy
 if (!shjs.which('git')) {
   queueCommand('echo Sorry, this script requires git');
@@ -92,7 +63,6 @@ if (MODE==="build"||MODE==="all"){
 
     //android
     queueCommand("rm -rf phonegap/lib/android/*");
-    //possible sync issue below
     queueCommand("cd temp/repositories/incubator-cordova-android && ./bin/create");
     queueCommand("cp -r temp/repositories/incubator-cordova-android/* phonegap/lib/android/");
     queueCommand("rm -rf phonegap/lib/android/framework && rm -rf phonegap/lib/android/test");
@@ -106,7 +76,6 @@ if (MODE==="build"||MODE==="all"){
     queueCommand("cp temp/repositories/incubator-cordova-blackberry-webworks/LICENSE phonegap/lib/blackberry/");
     queueCommand("cp temp/repositories/incubator-cordova-blackberry-webworks/VERSION phonegap/lib/blackberry/");
     queueCommand("cp -r temp/repositories/incubator-cordova-blackberry-webworks/bin phonegap/lib/blackberry/");
-    //possible sync issue below
     queueCommand("cd temp/repositories/incubator-cordova-blackberry-webworks && ant dist");
     queueCommand("cp -r temp/repositories/incubator-cordova-blackberry-webworks/dist/* phonegap/lib/blackberry/");
 
@@ -144,9 +113,3 @@ executeCommands(function(){
 	shjs.exec("echo DONE", {async:true}, function(e, stdout, stderr) {
 	});
 });
-
-/*
-executeSyncCommands(function(){
-	shjs.exec("echo SyncDONE", function(e, stdout, stderr) {
-	});
-});*/
