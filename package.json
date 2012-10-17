@@ -17,6 +17,6 @@
   "license": "apachev2",
   "dependencies": {
     "coho": "git://github.com/stevengill/coho.git",
-    "shelljs": "0.0.6"
+    "shelljs": "0.0.7"
   }
 }
