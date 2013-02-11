@@ -53,18 +53,18 @@ if (shjs.test('-d','./phonegap')){
 
 if (MODE==="prepare"||MODE==="all"){
     //run coho
-    queueCommand("./node_modules/coho/coho all "+VERSION+" "+oldVer);
+    queueCommand("./node_modules/coho/coho build "+VERSION+" "+oldVer);
 }
 
 if (MODE==="build"||MODE==="all"){
     //ios
     queueCommand("rm -rf phonegap/lib/ios/*");
-    queueCommand("cp -r temp/repositories/incubator-cordova-ios/* phonegap/lib/ios/");
+    queueCommand("cp -r temp/repositories/cordova-ios/* phonegap/lib/ios/");
 
     //android
     queueCommand("rm -rf phonegap/lib/android/*");
-    queueCommand("cd temp/repositories/incubator-cordova-android && ./bin/create example");
-    queueCommand("cp -r temp/repositories/incubator-cordova-android/* phonegap/lib/android/");
+    queueCommand("cd temp/repositories/cordova-android && ./bin/create example");
+    queueCommand("cp -r temp/repositories/cordova-android/* phonegap/lib/android/");
     queueCommand("rm -rf phonegap/lib/android/framework && rm -rf phonegap/lib/android/test");
     queueCommand("cp phonegap/lib/android/example/libs/cordova-"+VERSION+".jar phonegap/lib/android/");
     queueCommand("cp phonegap/lib/android/example/assets/www/cordova-"+VERSION+".js phonegap/lib/android/");
@@ -72,38 +72,50 @@ if (MODE==="build"||MODE==="all"){
 
     //blackberry
     queueCommand("rm -rf phonegap/lib/blackberry/*");
-    queueCommand("cp temp/repositories/incubator-cordova-blackberry-webworks/NOTICE phonegap/lib/blackberry/");
-    queueCommand("cp temp/repositories/incubator-cordova-blackberry-webworks/LICENSE phonegap/lib/blackberry/");
-    queueCommand("cp temp/repositories/incubator-cordova-blackberry-webworks/VERSION phonegap/lib/blackberry/");
-    queueCommand("cp -r temp/repositories/incubator-cordova-blackberry-webworks/bin phonegap/lib/blackberry/");
-    queueCommand("cd temp/repositories/incubator-cordova-blackberry-webworks && ./bin/create");
-    queueCommand("cp -r temp/repositories/incubator-cordova-blackberry-webworks/dist/* phonegap/lib/blackberry/");
+    queueCommand("cp temp/repositories/cordova-blackberry/NOTICE phonegap/lib/blackberry/");
+    queueCommand("cp temp/repositories/cordova-blackberry/LICENSE phonegap/lib/blackberry/");
+    queueCommand("cp temp/repositories/cordova-blackberry/VERSION phonegap/lib/blackberry/");
+    queueCommand("cp -r temp/repositories/cordova-blackberry/bin phonegap/lib/blackberry/");
+    queueCommand("cd temp/repositories/cordova-blackberry && ./bin/create");
+    queueCommand("cp -r temp/repositories/cordova-blackberry/dist/* phonegap/lib/blackberry/");
 
     //windows phone 7
-    queueCommand("rm -rf phonegap/lib/windows-phone/*");
-    queueCommand("cp -r temp/repositories/incubator-cordova-wp7/* phonegap/lib/windows-phone/");
+    queueCommand("rm -rf phonegap/lib/windows-phone-7/*");
+    queueCommand("cp -r temp/repositories/cordova-wp7/* phonegap/lib/windows-phone-7/");
+    
+    //windows phone 8
+    queueCommand("rm -rf phonegap/lib/windows-phone-8/*");
+    queueCommand("cp -r temp/repositories/cordova-wp8/* phonegap/lib/windows-phone-8/");
 
+    //windows 8
+    queueCommand("rm -rf phonegap/lib/windows8/*");
+    queueCommand("cp -r temp/repositories/cordova-windows/windows8/* phonegap/lib/windows8/");
+    
     //webos
     queueCommand("rm -rf phonegap/lib/webos/*");
-    queueCommand("cp -r temp/repositories/incubator-cordova-webos/* phonegap/lib/webos/");
+    queueCommand("cp -r temp/repositories/cordova-webos/* phonegap/lib/webos/");
 
     //bada
     queueCommand("rm -rf phonegap/lib/bada/*");
-    queueCommand("cp -r temp/repositories/incubator-cordova-bada/* phonegap/lib/bada/");
+    queueCommand("cp -r temp/repositories/cordova-bada/* phonegap/lib/bada/");
 
     //badawac
     queueCommand("rm -rf phonegap/lib/badaWac/*");
-    queueCommand("cp -r temp/repositories/incubator-cordova-bada-wac/* phonegap/lib/badaWac/");
+    queueCommand("cp -r temp/repositories/cordova-bada-wac/* phonegap/lib/badaWac/");
+    
+    //cordova cli
+    queueCommand("rm -rf phonegap/lib/cordova-cli/*");
+    queueCommand("cp -r temp/repositories/cordova-cli/* phonegap/lib/cordova-cli/");
 
     //docs
     queueCommand("rm -rf phonegap/doc/*");
-    queueCommand("cd temp/repositories/incubator-cordova-docs && ./bin/generate && cp -r public/en/"+VERSION+"/* ../../../phonegap/doc/");
+    queueCommand("cd temp/repositories/cordova-docs && ./bin/generate && cp -r public/en/"+VERSION+"/* ../../../phonegap/doc/");
 
     //copy changelog
     queueCommand("cp -r temp/release/src/cordova-"+VERSION+"/changelog phonegap/");
 
     //copy update version file
-    queueCommand("cp -r temp/repositories/incubator-cordova-android/VERSION phonegap/");
+    queueCommand("cp -r temp/repositories/cordova-android/VERSION phonegap/");
     
     //add phonegap variable to cordova.js files
     queueCommand("for file in $(find phonegap/ -name 'cordova-"+VERSION+".js'); do echo 'var PhoneGap = cordova;'>>$file; done;");

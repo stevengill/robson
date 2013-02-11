@@ -4,7 +4,7 @@
   "description": "phonegap release management tool",
   "main": "index.js",
   "scripts": {
-    "test": "./robson 2.1.0 2.0.0"
+    "test": "./robson 2.3.0 2.2.0"
   },
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
   "author": "steven gill",
   "license": "apachev2",
   "dependencies": {
-    "coho": "git://github.com/stevengill/coho.git",
-    "shelljs": "0.0.7"
+    "coho": "git://github.com/stevengill/coho.git#master",
+    "shelljs": "0.0.8"
   }
 }
