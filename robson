@@ -77,7 +77,7 @@ if (MODE==="build"||MODE==="all"){
     queueCommand("cp temp/repositories/cordova-blackberry/VERSION phonegap/lib/blackberry/");
     queueCommand("cp -r temp/repositories/cordova-blackberry/bin phonegap/lib/blackberry/");
     queueCommand("cd temp/repositories/cordova-blackberry && ./bin/create");
-    queueCommand("cp -r temp/repositories/cordova-blackberry/dist/* phonegap/lib/blackberry/");
+    queueCommand("cp -r temp/repositories/cordova-blackberry/example/* phonegap/lib/blackberry/");
 
     //windows phone 7
     queueCommand("rm -rf phonegap/lib/windows-phone-7/*");
