@@ -44,7 +44,7 @@ if (!shjs.which('git')) {
 //if phonegap directory already exisits, make sure it is latest code
 if (shjs.test('-d','./phonegap')){
     queueCommand('echo phonegap directory exists');
-    //queueCommand('cd phonegap && git pull origin master');
+    queueCommand('cd phonegap && git pull origin master');
     
 }else{
     //grab phonegap repo off github
@@ -105,9 +105,9 @@ if (MODE==="build"||MODE==="all"){
     queueCommand("cp -r temp/repositories/cordova-cli/* phonegap/lib/cordova-cli/");
 
     //docs
-    /*queueCommand("rm -rf phonegap/doc/*");
+    queueCommand("rm -rf phonegap/doc/*");
     queueCommand("cd temp/repositories/cordova-docs && ./bin/generate && cp -r public/en/"+VERSION+"/* ../../../phonegap/doc/");
-    */
+    
     //copy changelog
     queueCommand("cp -r temp/release/src/cordova-"+VERSION+"/changelog phonegap/");
 
