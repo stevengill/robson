@@ -102,7 +102,7 @@ if (MODE==="build"||MODE==="all"){
     
     //cordova cli
     queueCommand("rm -rf phonegap/lib/cordova-cli/*");
-    queueCommand("cp -r temp/repositories/cordova-cli/* phonegap/lib/cordova-cli/");
+    queueCommand("cp -r temp/repositories/cordova-cli/README.md phonegap/lib/cordova-cli/");
 
     //docs
     queueCommand("rm -rf phonegap/doc/*");
