@@ -88,7 +88,7 @@ if (MODE==="build"||MODE==="all"){
     queueCommand("rm -rf phonegap/lib/windows8/*");
     queueCommand("cp -r temp/repositories/cordova-windows/windows8/* phonegap/lib/windows8/");
     
-    //webos
+/*    //webos
     queueCommand("rm -rf phonegap/lib/webos/*");
     queueCommand("cp -r temp/repositories/cordova-webos/* phonegap/lib/webos/");
 
@@ -99,14 +99,15 @@ if (MODE==="build"||MODE==="all"){
     //badawac
     queueCommand("rm -rf phonegap/lib/badaWac/*");
     queueCommand("cp -r temp/repositories/cordova-bada-wac/* phonegap/lib/badaWac/");
-    
+*/    
     //cordova cli
     queueCommand("rm -rf phonegap/lib/cordova-cli/*");
     queueCommand("cp -r temp/repositories/cordova-cli/README.md phonegap/lib/cordova-cli/");
 
     //docs
     queueCommand("rm -rf phonegap/doc/*");
-    queueCommand("cd temp/repositories/cordova-docs && ./bin/generate && cp -r public/en/"+VERSION+"/* ../../../phonegap/doc/");
+    queueCommand("cd temp && git clone https://github.com/phonegap/phonegap-docs.git");
+    queueCommand("cd temp/phonegap-docs && git checkout "+VERSION+" && ./bin/generate && cp -r public/en/"+VERSION+"/* ../../phonegap/doc/");
     
     //copy changelog
     queueCommand("cp -r temp/release/src/cordova-"+VERSION+"/changelog phonegap/");
