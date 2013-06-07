@@ -104,12 +104,11 @@ if (MODE==="build"||MODE==="all"){
     queueCommand("rm -rf phonegap/lib/cordova-cli/*");
     queueCommand("cp -r cordova-cli/README.md phonegap/lib/cordova-cli/");
 
-/*
     //docs
     queueCommand("rm -rf phonegap/doc/*");
     queueCommand("git clone https://github.com/phonegap/phonegap-docs.git");
     queueCommand("cd phonegap-docs && git checkout "+VERSION+" && ./bin/generate && cp -r public/en/"+VERSION+"/* ../phonegap/doc/");
-*/    
+    
     //copy changelog
     queueCommand("cp -r releases/cordova-"+VERSION+"/cordova-"+VERSION+"/changelog phonegap/");
 
