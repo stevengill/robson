@@ -75,7 +75,7 @@ if (MODE==="build"||MODE==="all"){
     //blackberry
     queueCommand("rm -rf phonegap/lib/blackberry/*");
     queueCommand("cd cordova-blackberry && git checkout "+ VERSION);
-    queueCommand("cd cordova-blackberry/blackberry && ./bin/create ./example org.apache.cordova.example example");
+    queueCommand("cd cordova-blackberry/bbos && ./bin/create ./example org.apache.cordova.example example");
     queueCommand("cd cordova-blackberry/blackberry10 && npm install && ./bin/create ./example org.apache.cordova.example example");
     queueCommand("cp -r cordova-blackberry/* phonegap/lib/blackberry/")
 
